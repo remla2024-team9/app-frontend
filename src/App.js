@@ -3,7 +3,7 @@ import './App.css';
 
 function App() {
   const [input, setInput] = useState('');
-  const [prediction, setPrediction] = useState(null); // State to store the prediction result
+  const [prediction, setPrediction] = useState(null);
 
   const handleInputSubmit = async () => {
     try {
@@ -13,12 +13,12 @@ function App() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          input: input // The input entered in the text field
+          input: input
         })
       });
       const result = await response.json();
       if (response.ok) {
-        setPrediction(result.prediction); // Set the prediction state with the result
+        setPrediction(result.prediction);
         alert('Input submitted successfully.');
         setInput('');
       } else {
