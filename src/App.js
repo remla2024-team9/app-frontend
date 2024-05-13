@@ -3,6 +3,7 @@ import './App.css';
 
 function App() {
   const [input, setInput] = useState('');
+  const [prediction, setPrediction] = useState(null);
 
   const handleInputSubmit = async () => {
     try {
@@ -12,11 +13,12 @@ function App() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          input: input // The input entered in the text field
+          input: input
         })
       });
       const result = await response.json();
       if (response.ok) {
+        setPrediction(result.prediction);
         alert('Input submitted successfully.');
         setInput('');
       } else {
@@ -40,6 +42,12 @@ function App() {
               rows="4"
           />
           <button onClick={handleInputSubmit}>Submit input</button>
+          {prediction && (
+              <div className="prediction-result">
+                <h2>Prediction Result</h2>
+                <p>{prediction}</p>
+              </div>
+          )}
         </div>
       </div>
   );
