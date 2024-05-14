@@ -7,7 +7,7 @@ function App() {
 
   const handleInputSubmit = async () => {
     try {
-      const response = await fetch('/submit_input', {
+      const response = await fetch('http://127.0.0.1:8080/submit_input', {  // Use the full URL here
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
