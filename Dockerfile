@@ -9,12 +9,7 @@ RUN npm install
 
 ARG PUBLIC_URL
 RUN PUBLIC_URL=$PUBLIC_URL npm run build
-# Stage 2: Serve the React app with NGINX
-FROM nginx:alpine
 
-COPY --from=build /build /usr/share/nginx/html
+EXPOSE 5000
 
-EXPOSE 3000
-
-CMD ["nginx", "-g", "daemon off;"]
-
+CMD ["npx",  "serve", "-s", "build"]
