@@ -12,7 +12,7 @@ RUN PUBLIC_URL=$PUBLIC_URL npm run build
 # Stage 2: Serve the React app with NGINX
 FROM nginx:alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /build /usr/share/nginx/html
 
 EXPOSE 3000
 
