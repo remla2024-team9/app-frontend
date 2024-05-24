@@ -7,13 +7,14 @@ COPY . ./
 RUN npm install
 # If using yarn, replace npm install with yarn install
 
-RUN npm run build
+ARG PUBLIC_URL
+RUN PUBLIC_URL=$PUBLIC_URL npm run build
+# Stage 2: Serve the React app with NGINX
+FROM nginx:alpine
 
-# Step 8: Define environment variable for port
-ENV PORT 3000
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Step 9: Expose port 3000 to the outside once the container is launched
 EXPOSE 3000
 
-# Step 10: Run the app using serve
-CMD ["npm", "start"]
+CMD ["nginx", "-g", "daemon off;"]
+
