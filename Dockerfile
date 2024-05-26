@@ -1,10 +1,6 @@
 # Step 1: Use an official Node.js runtime as a parent image
 FROM node:21-bullseye-slim
 
-# Set build-time environment variables
-ARG REACT_APP_BACKEND_URL
-ENV REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
-
 # Copy all files to the container
 COPY . ./
 
