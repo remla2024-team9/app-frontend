@@ -5,11 +5,11 @@ COPY . ./
 
 # Step 4: Install dependencies
 RUN npm install
-# If using yarn, replace npm install with yarn install
 
-ARG PUBLIC_URL
-RUN PUBLIC_URL=$PUBLIC_URL npm run build
+RUN npm run build
 
-EXPOSE 5000
+EXPOSE 3000
 
-CMD ["npx",  "serve", "-s", "build"]
+RUN npm install -g serve
+
+CMD ["serve", "-s", "build"]
