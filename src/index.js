@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-console.log("Process ENV: ", process.env.REACT_APP_BACKEND_URL)
+console.log("Window.appConfig: ", window.appConfig)
 root.render(
   <React.StrictMode>
     <App />
