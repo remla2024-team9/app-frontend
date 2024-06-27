@@ -1,0 +1,53 @@
+name: Bump Version and Push Tag
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  bump_version:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.SAMUEL_PAT2 }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          VERSION_PARTS=(${CURRENT_VERSION//./ })
+          VERSION_PARTS[2]=$((VERSION_PARTS[2]+1))
+          NEW_VERSION="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
+          echo "New version: $NEW_VERSION"
+          npm version $NEW_VERSION --no-git-tag-version
+          echo "::set-output name=new_version::$NEW_VERSION"
+
+      - name: Verify version consistency
+        run: |
+          NPM_VERSION=$(node -p "require('./package.json').version")
+          if [ "$NPM_VERSION" != "${{ steps.bump_version.outputs.new_version }}" ]; then
+            echo "Version in package.json ($NPM_VERSION) does not match the expected new version (${{ steps.bump_version.outputs.new_version }})"
+            exit 1
+          fi
+
+      - name: Commit version bump
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add package.json package-lock.json
+          git commit -m "Bump version to ${{ steps.bump_version.outputs.new_version }}"
+          git tag ${{ steps.bump_version.outputs.new_version }}
+          git push origin main --tags
