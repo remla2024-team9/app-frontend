@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [input, setInput] = useState('');
   const [prediction, setPrediction] = useState(null);
+  const [predictionMessage, setPredictionMessage] = useState('');
 
   const handleInputSubmit = async () => {
     try {
@@ -19,6 +20,8 @@ function App() {
       const result = await response.json();
       if (response.ok) {
         setPrediction(result.prediction);
+        const message = result.prediction > 0.5 ? 'phishing' : 'not phishing';
+        setPredictionMessage(`${message} (probability: ${result.prediction})`);
         alert('Input submitted successfully.');
         setInput('');
       } else {
@@ -30,26 +33,26 @@ function App() {
   };
 
   return (
-      <div className="app-container">
-        <h1>Submit Your Input</h1>
-        <div className="input-container">
-          <label htmlFor="input">Input:</label>
-          <textarea
-              id="input"
-              placeholder="Enter your input here"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              rows="4"
-          />
-          <button onClick={handleInputSubmit}>Submit input</button>
-          {prediction && (
-              <div className="prediction-result">
-                <h2>Prediction Result</h2>
-                <p>{prediction}</p>
-              </div>
-          )}
-        </div>
+    <div className="app-container">
+      <h1>Submit Your Input</h1>
+      <div className="input-container">
+        <label htmlFor="input">Input:</label>
+        <textarea
+          id="input"
+          placeholder="Enter your input here"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          rows="4"
+        />
+        <button onClick={handleInputSubmit}>Submit input</button>
+        {prediction !== null && (
+          <div className="prediction-result">
+            <h2>Prediction Result</h2>
+            <p>{predictionMessage}</p>
+          </div>
+        )}
       </div>
+    </div>
   );
 }
 
